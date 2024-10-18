@@ -1,3 +1,7 @@
+import os
+import subprocess
+from libqtile import hook
+#*******
 from libqtile import bar, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
@@ -65,6 +69,9 @@ keys = [
     #brightness
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-")),
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%")),
+    #Screenshot
+    Key([mod], "Print", lazy.spawn("flameshot full -p ~/Pictures/"), desc="Take a screenshot with Flameshot"),
+    Key(["shift"], "Print", lazy.spawn("flameshot gui"), desc="Take a screenshot with Flameshot without delay"),
 
 ]
 
@@ -247,7 +254,15 @@ screens = [
                     foreground = "#243642",
                     background = "#243642"
                 ),
-		        widget.Systray(),
+		        widget.Systray(
+
+                ),
+                widget.Sep(
+                    linewidth = 1,
+                    padding = 5,
+                    foreground = "#243642",
+                    background = "#243642"
+                ),
                 # widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
                 widget.Clock(
                     foreground = "#2e3440",
@@ -348,3 +363,8 @@ wl_xcursor_size = 24
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
+# autostart thing
+@hook.subscribe.startup_once
+def autostart():
+    subprocess.call([os.path.expanduser("~/.config/qtile/autostart.sh")])
